@@ -2,6 +2,7 @@
   "baseUrl": "http://localhost:7000",
   "integrationFolder": "e2e/specs",
   "pluginsFile": false,
+  "supportFile": false,
   "fixturesFolder": "e2e/fixtures",
   "videosFolder": "e2e/recordings",
   "screenshotsFolder": "e2e/screenshots"

@@ -1,6 +1,6 @@
 [
     {"id":1, "job": "Makan", "done": false,"cancelled": false,"addedAt": "2021-02-09T14:19:54.697+0000",
-        "attachment": "makan.txt", "assignee": 1},
+        "attachment": "makan.txt", "assignee": {"id":1, "name": "Budi", "age": 21, "bio": "saya cowok", "address": "Jl Kesayangan 1", "photo": "123.jpg"}},
     {"id":2, "job": "Belajar", "done": false,"cancelled": false,"addedAt": "2021-02-09T15:00:54.697+0000",
-        "attachment": "belajar.txt", "assignee": 2}
+        "attachment": "belajar.txt", "assignee": {"id":2, "name": "Susi", "age": 25, "bio": "saya cewek", "address": "Jl in aja dulu 2", "photo": "456.jpg"}}
 ]

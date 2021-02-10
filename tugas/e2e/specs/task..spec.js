@@ -1,12 +1,39 @@
+import 'cypress-file-upload';
+
 describe('Task Page', () =>{
     if('bisa akses halaman task', () => {
         cy.visit('/tasks.html');
     });
 
+    describe("Error di Task Page", ()=>{
+        it('Gagal mendapatkan daftar task ketika tidak ditemukan', () => {
+            cy.intercept('localhost:7002/list', '').as('getTask');
+            cy.visit('/tasks.html');
+            cy.wait('@getTask');
+            cy.get('#error-text').should('contain.text', 'gagal memuat daftar pekerjaan');
+        });
+        it('Gagal mendapatkan daftar worker ketika tidak ditemukan', () => {
+            cy.intercept('localhost:7001/list', '').as('getWorker');
+            cy.visit('/tasks.html');
+            cy.wait('@getWorker');
+            cy.get('#error-text').should('contain.text', 'gagal menampilkan pekerja');
+        });
+        it('Submit task baru tapi form tidak lengkap', () => {
+            cy.intercept('localhost:7001/list', { fixture: 'workerTask', content}).as('getWorker');
+            cy.intercept('localhost:7002/add', { id:3, job: 'Nyuci', done: false, cancelled: false, addedAt: "2021-02-09T18:00:54.697+0000",attachment: "", 
+            assignee: {}}).as('regisTask');
+            cy.visit('/tasks.html');
+            cy.wait('@getWorker');
+            cy.get('#job').type('Nyuci');
+            cy.get('#form').submit();
+            cy.get('#error-text').should('contain.text', 'form isian tidak lengkap!');
+        });
+    });
+
     describe("Daftar Tugas", () =>{
         beforeEach(() => {
-            cy.intercept('localhost:7001/list', { fixture: 'workerTask.json', content}).as('getWorker');
-            cy.intercept('localhost:7002/list', { fixture: 'task.json' }).as('getTask');
+            cy.intercept('localhost:7001/list', { fixture: 'workerTask', content}).as('getWorker');
+            cy.intercept('localhost:7002/list', { fixture: 'task' }).as('getTask');
         });
 
         it('seharusnya bisa menampilkan pekerjaan yang ada', () => {
@@ -43,13 +70,14 @@ describe('Task Page', () =>{
         });
     });
 
-    describe("Activitas di Task", ()=>{
+    describe("Menambahkan Task Baru", ()=>{
         beforeEach(() => {
-            cy.intercept('localhost:7001/list', { fixture: 'workerTask.json', content}).as('getWorker');
-            cy.intercept('localhost:7002/list', { fixture: 'task.json' }).as('getTask');
+            cy.intercept('localhost:7001/list', { fixture: 'workerTask', content}).as('getWorker');
+            cy.intercept('localhost:7002/list', { fixture: 'task' }).as('getTask');
         });
         it('seharusnya ketika semua form terisi dan klik tombol "kirim" maka jumlah task bertambah', () => {
-            cy.intercept('http://localhost:7002/add', { id:3, job: 'Main Game', done: true, cancelled: false, addedAt: "2021-02-09T18:00:54.697+0000",attachment: "game.txt", assignee: 2}).as('regisTask');
+            cy.intercept('localhost:7002/add', { id:3, job: 'Main Game', done: false, cancelled: false, addedAt: "2021-02-09T18:00:54.697+0000",attachment: "game.txt", 
+            assignee: {"id":2, "name": "Susi", "age": 25, "bio": "saya cewek", "address": "Jl in aja dulu 2", "photo": "456.jpg"}}).as('regisTask');
             cy.visit('/tasks.html');
             cy.wait('@getWorker'); 
             cy.wait('@getTask');
@@ -61,6 +89,8 @@ describe('Task Page', () =>{
             cy.get('#list').children().as('taskList');
             cy.get('@taskList').should('have.length', 3);
             cy.get('@taskList').eq(2).should('contain.text', 'Main Game');
-          });
+        });
     });
+
+    
 });
