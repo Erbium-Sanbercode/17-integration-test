@@ -1,0 +1,4 @@
+[
+    {"id":1, "name": "Budi", "age": 21, "bio": "saya cowok", "address": "Jl Kesayangan 1", "photo": "123.jpg"},
+    {"id":2, "name": "Susi", "age": 25, "bio": "saya cewek", "address": "Jl in aja dulu 2", "photo": "456.jpg"}
+]
